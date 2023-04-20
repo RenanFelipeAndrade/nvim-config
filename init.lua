@@ -2,6 +2,8 @@
 vim.o.relativenumber = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
+-- Sync registers with system clipboard
+vim.opt.clipboard:append { "unnamedplus" }
 
 -- variables
 local Plug = vim.fn["plug#"]
@@ -10,8 +12,6 @@ local Plug = vim.fn["plug#"]
 vim.call("plug#begin")
 
 Plug 'neovim/nvim-lspconfig'
-Plug 'williamboman/mason.nvim'
-Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
@@ -21,6 +21,9 @@ Plug 'glepnir/lspsaga.nvim'
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'nvim-tree/nvim-tree.lua'
 Plug 'airblade/vim-rooter'
+Plug 'L3MON4D3/LuaSnip'
+Plug 'saadparwaiz1/cmp_luasnip'
+
 
 vim.call("plug#end")
 
@@ -39,6 +42,8 @@ keyset('n', '<leader>e', '<cmd>NvimTreeToggle<cr>')
 keyset('n', '<leader>c', '<cmd>q<cr>')
 keyset('n', '<leader>w', '<cmd>w<cr>')
 keyset('n', '<leader>q', '<cmd>wq<cr>')
+keyset('n', '<leader>h', '<cmd>:nohlsearch<cr>')
+-- keyset('v', '<C-c>', '"+y')
 
 -- neovim tree config
 require("nvim-tree").setup({
@@ -46,11 +51,6 @@ require("nvim-tree").setup({
     relativenumber = true
     },
     sync_root_with_cwd = true,
-    -- respect_buf_cwd = true,
-    -- update_focused_file = {
-    --     enable = true,
-    --     update_root = true
-    -- }
 })
 
 -- cmp config
@@ -63,7 +63,11 @@ cmp.setup({
       ['<C-e>'] = cmp.mapping.abort(),
       ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     }),
-
+    snippet = {
+    expand = function(args)
+        require('luasnip').lsp_expand(args.body)
+    end
+    },
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
     },{
@@ -76,18 +80,7 @@ require('lspconfig')['tsserver'].setup {
 capabilities = capabilities
 }
 
--- mason config
-require("mason").setup({
-    ui = {
-        icons = {
-            package_installed = "✓",
-            package_pending = "➜",
-            package_uninstalled = "✗"
-        }
-    }
-})
+require('lspconfig')['pyright'].setup {
+capabilities = capabilities
+}
 
--- mason-lspconfig config
-require("mason-lspconfig").setup({
-    automatic_installation = true
-})
