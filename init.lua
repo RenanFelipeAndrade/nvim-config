@@ -1,5 +1,6 @@
 -- nvim config
 vim.o.relativenumber = true
+vim.o.ignorecase = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 -- Sync registers with system clipboard
@@ -23,9 +24,12 @@ Plug 'nvim-tree/nvim-tree.lua'
 Plug 'airblade/vim-rooter'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
-
+Plug 'Mofiqul/dracula.nvim'
 
 vim.call("plug#end")
+
+-- colorscheme
+vim.cmd('colorscheme dracula')
 
 -- vim options
 local option = vim.o
@@ -43,7 +47,6 @@ keyset('n', '<leader>c', '<cmd>q<cr>')
 keyset('n', '<leader>w', '<cmd>w<cr>')
 keyset('n', '<leader>q', '<cmd>wq<cr>')
 keyset('n', '<leader>h', '<cmd>:nohlsearch<cr>')
--- keyset('v', '<C-c>', '"+y')
 
 -- neovim tree config
 require("nvim-tree").setup({
@@ -74,8 +77,10 @@ cmp.setup({
       { name = 'buffer' },
       }
     )})
+
+-- language server
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
--- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+
 require('lspconfig')['tsserver'].setup {
 capabilities = capabilities
 }
