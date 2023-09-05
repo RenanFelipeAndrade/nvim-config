@@ -29,6 +29,7 @@ Plug 'nvim-tree/nvim-web-devicons'
 Plug 'nvim-tree/nvim-tree.lua'
 Plug 'ahmedkhalf/project.nvim'
 Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'jay-babu/mason-null-ls.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'Mofiqul/dracula.nvim'
 Plug 'cloudhead/neovim-fuzzy'
@@ -140,7 +141,9 @@ nvim_lsp['prismals'].setup { capabilities = capabilities }
 vim.diagnostic.config({ virtual_text = false })
 
 -- manson setup
-require("mason").setup()
+require("mason").setup({
+    PATH = "append",
+})
 
 -- mason-lspconfig setup
 require("mason-lspconfig").setup(
@@ -148,6 +151,11 @@ require("mason-lspconfig").setup(
         automatic_installation = true,
     }
 )
+
+-- mason-null-ls setup
+require("mason-null-ls").setup({
+    automatic_installation = true
+})
 
 -- treesitter setup
 require 'nvim-treesitter.configs'.setup {
@@ -163,7 +171,7 @@ require 'nvim-treesitter.configs'.setup {
 -- null_ls config
 local null_ls = require("null-ls")
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-
+--
 null_ls.setup({
     sources = {
         null_ls.builtins.code_actions.eslint,
@@ -177,16 +185,16 @@ null_ls.setup({
         null_ls.builtins.diagnostics.eslint,
         null_ls.builtins.diagnostics.fish,
     },
-    on_attach = function(client, bufnr)
-        if client.supports_method("textDocument/formatting") then
-            vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-            vim.api.nvim_create_autocmd("BufWritePre", {
-                group = augroup,
-                buffer = bufnr,
-                callback = function()
-                    vim.lsp.buf.format({ bufnr = bufnr })
-                end,
-            })
-        end
-    end,
+    --     on_attach = function(client, bufnr)
+    --         if client.supports_method("textDocument/formatting") then
+    --             vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+    --             vim.api.nvim_create_autocmd("BufWritePre", {
+    --                 group = augroup,
+    --                 buffer = bufnr,
+    --                 callback = function()
+    --                     vim.lsp.buf.format({ bufnr = bufnr })
+    --                 end,
+    --             })
+    --         end
+    --     end,
 })
