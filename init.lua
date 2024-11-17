@@ -52,7 +52,6 @@ vim.cmd('colorscheme dracula')
 
 -- vim options
 local option = vim.o
-option.noswapfile = true
 option.tabstop = 4
 option.shiftwidth = 4
 option.expandtab = true
@@ -127,7 +126,7 @@ cmp.setup({
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local nvim_lsp = require('lspconfig')
 
-nvim_lsp['tsserver'].setup { capabilities = capabilities }
+nvim_lsp['ts_ls'].setup { capabilities = capabilities }
 nvim_lsp['html'].setup { capabilities = capabilities }
 nvim_lsp['cssls'].setup { capabilities = capabilities }
 nvim_lsp['cssmodules_ls'].setup { capabilities = capabilities }
